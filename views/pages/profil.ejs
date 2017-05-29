@@ -1,0 +1,40 @@
+<div class="ui middle aligned center aligned grid">
+  <div class="column" style="max-width:360px;">
+
+    <h2 class="ui blue image header">
+      <div class="content">
+        Profil <% if(req.user.pseudo.charAt(0) === "a" || "e" || "i" || "o" || "u" || "h"){ %> d'<% }else{ %> de <% }%><%= req.user.pseudo.charAt(0).toUpperCase() %><%= req.user.pseudo.substring(1,req.user.pseudo.length) %>
+      </div>
+    </h2>
+
+    <form class="ui large form" action="/inscription" method="post">
+      <div class="ui segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="pseudo" placeholder="Pseudonyme" value="<%= req.user.pseudo %>" disabled>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="mail icon"></i>
+            <input type="text" name="email" placeholder="Adresse email" value="<%= req.user.email %>" disabled>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="phone icon"></i>
+            <input type="text" name="portable" placeholder="n° de portable" value="<%= req.user.portable %>" disabled>
+          </div>
+        </div>
+        <!--
+        <div class="ui fluid large teal submit button">Confirmer l'inscription</div>
+        -->
+        <a href="/user_delete" style="color:red;display:none;">Supprimer définitivement mon compte</a>
+      </div>
+
+      <div class="ui error message"></div>
+    </form>
+
+  </div>
+</div>

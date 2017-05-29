@@ -1,0 +1,153 @@
+<% for(var i=0; i < textes.length; i++) { %>
+  <% if(textes[i]._id == req.query.text) { %>
+
+    <div class="ui stackable divided grid">
+
+      <!-- Colonne pour afficher le formulaire de création -->
+      <div class="eight wide column">
+
+        <h2 class="ui header">
+          <i class="plus icon"></i>
+          <div class="content">
+            Proposer votre amendement
+            <div class="sub header">Il devra recueillir suffisament de parainnages pour passer aux votes</div>
+          </div>
+        </h2>
+
+        <div class="ui message teal">
+          Note : les contenus des textes de Emendare.org sont rédigés avec la syntaxe Markdown. Si vous ne connaissez pas le Markdown, vous pouvez suivre le lien suivant qui vous en expliquera les principes simples en quelques minutes.</br>
+          <a href="https://fr.wikipedia.org/wiki/Markdown" target="_blank">Apprendre le Markdown sur Wikipédia</a>
+        </div>
+
+        <form class="ui small form" action="/creer_texte" method="post">
+          <div class="field">
+            <label>Corps de l'amendement (utilisation du Markdown conseillée pour styliser votre texte)</label>
+            <textarea id="text_contenu" name="contenu" style="max-height:none;"><%- textes[i].contenu %></textarea>
+            <textarea id="prev_contenu" name="contenu" style="display:none;"><%- textes[i].contenu %></textarea>
+          </div>
+          <div class="ui large teal submit button">Confirmer</div>
+          <div class="ui error message"></div>
+        </form>
+
+        <% if(messages.erreur){ %>
+          <div class="ui icon error message">
+            <i class="warning icon"></i>
+            <div class="content">
+              <div class="header">
+                <%= messages.erreur %>
+              </div>
+              <p></p>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="ui message warning">
+          Attention en confirmant l'ajout de cet amendement, vous acceptez de le rendre public et de perdre vos droits à la propriété intellectuelle sur ce dernier. Vous certifiez également ne pas l'avoir signé d'une quelconque manière. Sur Emendare.org, tous les contenus sont anonymes.
+        </div>
+
+      </div>
+
+      <!-- Script pour générer la prévisualisation -->
+      <script type="text/javascript">
+        $(document).ready(function(){
+          var converter = new showdown.Converter();
+
+          // On fait la fonction pour prévisualiser une fois au lancement
+          if($("#text_contenu").val()!=""){
+            $("#text_previsualisation").html($("#text_contenu").val().split(/\r/).join("<br>").split(/\n/).join("<br>"));
+          }else{
+            $("#text_previsualisation").html(
+              'Vous n\'avez pas encore renseigné le corps de votre texte'
+            );
+          }
+
+          // Initialisation du moteur de diff
+          var dmp = new diff_match_patch();
+
+          // Quand l'utilisateur rentre son texte
+          $("#text_contenu").on('input', function(){
+            var d = dmp.diff_main($("#prev_contenu").val(), $("#text_contenu").val());
+            dmp.diff_cleanupSemantic(d);
+            var ds = dmp.diff_prettyHtml(d);
+            $("#text_previsualisation").html(ds);
+          });
+        });
+      </script>
+
+      <!-- Colonne pour afficher la prévisualisation -->
+      <div class="eight wide column">
+
+        <h2 class="ui header">
+          <i class="font icon"></i>
+          <div class="content">
+            Prévisualisation de votre amendement
+            <div class="sub header">L'amendement est affiché tel qu'il apparaîtra aux utilisateurs</div>
+          </div>
+        </h2>
+
+        <div class="ui segment small" id="text_previsualisation">
+          Vous n'avez pas encore renseigné le corps de votre amendement
+        </div>
+      </div>
+    </div>
+
+    <!-- Script pour gérer la validation du formulaire -->
+    <script>
+      $(document).ready(function(){
+        $('.ui.form').form({
+          fields: {
+            titre: {
+              identifier: 'titre',
+              rules: [{
+                  type: 'empty',
+                  prompt: 'Renseignez un titre'
+                },
+                {
+                  type: 'minLength[6]',
+                  prompt: 'Ce titre est trop court'
+                },
+                {
+                  type: 'maxLength[32]',
+                  prompt: 'Ce titre est trop long'
+                }
+              ]
+            },
+            description: {
+              identifier: 'description',
+              depends: 'titre',
+              rules: [
+                {
+                  type: 'empty',
+                  prompt: 'Renseignez une description'
+                },
+                {
+                  type: 'minLength[12]',
+                  prompt: 'Cette description est trop courte'
+                },
+                {
+                  type: 'maxLength[64]',
+                  prompt: 'Votre description est trop longue'
+                }
+              ]
+            },
+            contenu: {
+              identifier: 'contenu',
+              depends: 'description',
+              rules: [
+                {
+                  type: 'empty',
+                  prompt: 'Votre texte ne peut pas être vide'
+                },
+                {
+                  type: 'minLength[24]',
+                  prompt: 'Votre texte est trop court'
+                }
+              ]
+            }
+          }
+        });
+      });
+    </script>
+
+  <% } %>
+<% } %>

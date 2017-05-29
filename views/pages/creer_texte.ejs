@@ -1,0 +1,114 @@
+<div class="ui stackable divided grid">
+
+  <!-- Colonne pour afficher le formulaire de création -->
+  <div class="eight wide column">
+
+    <h2 class="ui header">
+      <i class="plus icon"></i>
+      <div class="content">
+        Ajouter un nouveau texte
+        <div class="sub header">Il sera immédiatement disponible dans la liste des textes</div>
+      </div>
+    </h2>
+
+    <form class="ui small form" action="/creer_texte" method="post">
+      <div class="field">
+        <label>Titre principal du texte</label>
+        <input type="text" name="titre">
+      </div>
+      <div class="field">
+        <label>Brève description du sujet du texte</label>
+        <input type="text" name="description">
+      </div>
+      <div class="field">
+        <label>Corps du texte</label>
+        <textarea id="text_contenu" name="contenu" style="max-height:none;"></textarea>
+      </div>
+      <div class="inline field">
+        <div class="ui toggle checkbox">
+          <input name="locked" type="checkbox" tabindex="0" class="hidden">
+          <label>Verouillé le texte ?</label>
+        </div>
+      </div>
+      <input type="hidden" name="auteur" value="<%= req.user._id %>">
+      <div class="ui large teal submit button">Confirmer</div>
+      <div class="ui error message"></div>
+    </form>
+
+    <% if(messages.erreur){ %>
+      <div class="ui icon error message">
+        <i class="warning icon"></i>
+        <div class="content">
+          <div class="header">
+            <%= messages.erreur %>
+          </div>
+          <p></p>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="ui message warning">
+      Attention en confirmant l'ajout de ce texte, vous acceptez de le rendre public et de perdre vos droits à la propriété intellectuelle sur ce dernier. Vous certifiez également ne pas avoir signé votre texte d'une quelconque manière. Sur Emendare.org, tous les contenus sont anonymes.
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Script pour gérer la validation du formulaire -->
+<script>
+  $(document).ready(function(){
+    $('.ui.form').form({
+      fields: {
+        titre: {
+          identifier: 'titre',
+          rules: [{
+              type: 'empty',
+              prompt: 'Renseignez un titre'
+            },
+            {
+              type: 'minLength[12]',
+              prompt: 'Ce titre est trop court'
+            },
+            {
+              type: 'maxLength[64]',
+              prompt: 'Ce titre est trop long'
+            }
+          ]
+        },
+        description: {
+          identifier: 'description',
+          depends: 'titre',
+          rules: [
+            {
+              type: 'empty',
+              prompt: 'Renseignez une description'
+            },
+            {
+              type: 'minLength[24]',
+              prompt: 'Cette description est trop courte'
+            },
+            {
+              type: 'maxLength[256]',
+              prompt: 'Votre description est trop longue'
+            }
+          ]
+        },
+        contenu: {
+          identifier: 'contenu',
+          depends: 'description',
+          rules: [
+            {
+              type: 'empty',
+              prompt: 'Votre texte ne peut pas être vide'
+            },
+            {
+              type: 'minLength[24]',
+              prompt: 'Votre texte est trop court'
+            }
+          ]
+        }
+      }
+    });
+  });
+</script>

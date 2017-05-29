@@ -1,0 +1,68 @@
+<!-- Sidebar -->
+<div class="ui vertical inverted sidebar menu">
+
+	<div class="item">
+		<div class="header">Pages principales</div>
+		<div class="menu">
+
+			<!-- Liste des liens principaux -->
+			<% for(var i=0; i < routes.length; i++) { %>
+				<% if(routes[i].main_menu) { %>
+					<a href="<%= routes[i].path %>" <% if(routes[i].nofollow) { %> rel="nofollow" <% } %> class="item <% if(routes[i].path == req.path) { %> active <% } %>">
+						<%= routes[i].titre %>
+					</a>
+				<% } %>
+			<% } %>
+
+		</div>
+	</div>
+
+	<% if(req.user){ %>
+		<div class="item">
+			<div class="header">
+				<%= req.user.pseudo.charAt(0).toUpperCase() %><%= req.user.pseudo.substring(1,req.user.pseudo.length) %> sur Emendare
+			</div>
+			<div class="menu">
+
+				<!-- Liste des liens de l'utilisateur -->
+				<% for(var i=0; i < routes.length; i++) { %>
+					<% if(routes[i].user_menu) { %>
+						<a href="<%= routes[i].path %>" <% if(routes[i].nofollow) { %> rel="nofollow" <% } %> class="item <% if(routes[i].path == req.path) { %> active <% } %>">
+							<%= routes[i].titre %>
+						</a>
+					<% } %>
+				<% } %>
+
+			</div>
+		</div>
+	<% } %>
+
+	<div class="item">
+		<div class="header">A propos d'Emendare</div>
+		<div class="menu">
+
+			<!-- Liste des liens secondaires -->
+			<% for(var i=0; i < routes.length; i++) { %>
+				<% if(routes[i].alt_menu) { %>
+					<a href="<%= routes[i].path %>" <% if(routes[i].nofollow) { %> rel="nofollow" <% } %> class="item <% if(routes[i].path == req.path) { %> active <% } %>">
+						<%= routes[i].titre %>
+					</a>
+				<% } %>
+			<% } %>
+
+		</div>
+	</div>
+
+	<% if(!req.user){ %>
+		<div class="item">
+			<div class="header">Participez à Emendare</div>
+			<div class="menu">
+
+				<a href="/inscription" class="item">Inscription</a>
+				<a href="/connexion" class="item">Connexion</a>
+
+			</div>
+		</div>
+	<% } %>
+
+</div>

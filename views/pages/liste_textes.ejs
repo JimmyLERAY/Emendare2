@@ -1,0 +1,153 @@
+<h2 class="ui header grey">
+  <i class="list layout icon"></i>
+  <div class="content">
+    Liste des textes disponibles
+    <div class="sub header">Vous pouvez parcourir les textes d'Emendare</div>
+  </div>
+</h2>
+
+<div class="ui search">
+  <div class="ui icon input" style="width:100%;">
+    <input id="text_search" class="prompt" type="text" placeholder="Filtrer les textes pour trouver vite ceux qui vous intéressent">
+    <i class="search icon"></i>
+  </div>
+</div>
+<% if(req.user){ %>
+  <% if(req.user.admin){ %>
+    <a href="/creer_texte" class="ui button blue" style="margin-top:10px;display:block;">
+      <i class="plus icon"></i>
+      Ajouter un nouveau texte
+    </a>
+  <% } %>
+<% } %>
+
+<!-- Mini plugin jQuery pour surligner les résultats -->
+<script type="text/javascript">
+  (function($){
+      function highlight($el, word) {
+          var text = $el.html();
+          text = text.replace(new RegExp('('+word+')','gi'), '<span class="green">$1</span>');
+          $el.html(text);
+      }
+      function unhighlight($el) {
+          var text = $el.html();
+          text = text.replace(/<span class="green">([\s\S]*?)<\/span>/g, '$1');
+          $el.html(text);
+      }
+      $.fn.highlight = function(word) {
+          return this.each(function() {
+              highlight($(this), word);
+          });
+      };
+      $.fn.unhighlight = function() {
+          return this.each(function() {
+              unhighlight($(this));
+          });
+      };
+  }(jQuery));
+</script>
+
+<!-- Script pour gérer le filtrage des textes officiels -->
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Quand l'utilisateur tape une recherche
+    $("#text_search").on('input', function(){
+      // On enlève par défaut tous les items de la liste
+      $("#text.list .item").css("display", "none");
+      $("#no-result").css("display", "none");
+      // On initialise un booléen pour savoir si il y'a ou non des résultats
+      var flag = true;
+      // Puis on filtre les items ne correspondant pas à la recherche
+      $("#text.list .item.texte").filter(function(index){
+        if($("#text-"+index+" .header").text().toLowerCase().search($("#text_search").val().toLowerCase())!==-1 || $("#text-"+index+" .description").text().toLowerCase().search($("#text_search").val().toLowerCase())!==-1){
+          flag = false;
+          return true;
+        }else{
+          return false;
+        }
+      }).css("display", "list-item");
+      // Si le flag est toujours vrai, tout a été filtré
+      if(flag){
+        // On affiche alors qu'il n'y a pas de résultat
+        $("#no-result").css("display", "list-item");
+      }
+      $('.textes .header').unhighlight();
+      $('.textes .description small').unhighlight();
+      if($("#text_search").val()!=''){
+        $('.textes .header').highlight($("#text_search").val().toLowerCase());
+        $('.textes .description small').highlight($("#text_search").val().toLowerCase());
+      }
+    });
+  });
+</script>
+
+<div id="text" class="ui very relaxed list">
+
+  <!-- Liste des textes officiels -->
+  <% for(var i=0; i < textes.length; i++) { %>
+    <div id="text-<%= i %>" class="ui item texte message textes" style="padding:10px;cursor:pointer;" onclick="selectText(<%= i %>)" data-id="<%= textes[i]._id %>">
+      <% if(textes[i].locked){ %>
+        <i class="large lock middle aligned icon popup" data-position="top center" data-content="Ce texte est officiel et verrouillé mais vous pouvez toujours voter"></i>
+      <% }else{ %>
+        <i class="large unlock alternate middle aligned icon popup" data-position="top center" data-content="Ce texte est ouvert. Vous pouvez donc voter et éditer son contenu"></i>
+      <% } %>
+      <div class="content">
+        <p class="header"><%= textes[i].titre %></p>
+        <div class="description">
+          <small><%= textes[i].description %></small>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <div id="no-result" class="item" style="display:none;">
+    <i class="caret right icon"></i>
+    <div class="content">
+      <div class="description">Aucun texte ne correspond à votre recherche</div>
+    </div>
+  </div>
+</div>
+
+<!-- Script pour gérer la sélection d'un texte -->
+<script type="text/javascript">
+  var selected_class = "blue";
+  var selected_text = null;
+
+  function selectText(id){
+    // Si le texte est déjà sélectionné
+    if(selected_text == id){
+      // On le déselectionne
+      unSelectText();
+    }else if(selected_text == null){
+      selected_text = id;
+      $('#popularite-moyenne').html("xx");
+      $('#votes-moyenne').html("xx");
+      $('#content').html("");
+      $(".textes").removeClass(selected_class);
+      $("#text-" + id).addClass(selected_class);
+      $("#disp_texte").fadeIn(500);
+      $("#options_texte").fadeIn(1000);
+      get_texte($("#text-" + id).attr("data-id"));
+    }else{
+      // Sinon on le sélectionne
+      unSelectText();
+      $('#popularite-moyenne').html("xx");
+      $('#votes-moyenne').html("xx");
+      $('#content').html("");
+      $("#text-" + id).addClass(selected_class);
+      setTimeout(function(){
+        selected_text = id;
+        $("#disp_texte").fadeIn(500);
+        $("#options_texte").fadeIn(1000);
+        get_texte($("#text-" + id).attr("data-id"));
+      }, 1000);
+    }
+  }
+
+  function unSelectText(){
+    selected_text = null;
+    $(".textes").removeClass(selected_class);
+    $("#disp_texte").fadeOut(1000);
+    $("#options_texte").fadeOut(500);
+  }
+</script>

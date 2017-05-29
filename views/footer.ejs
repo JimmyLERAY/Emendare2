@@ -1,0 +1,78 @@
+<div id="bottom-footer" class="ui footer small bottom fixed borderless menu">
+	<div class="ui fluid container">
+
+		<div class="item">
+			<span id="div_horloge"></span>
+		</div>
+ 
+		<script type="text/javascript">
+			window.onload = function(){
+				horloge('div_horloge');
+			};
+
+			function horloge(el){
+				if(typeof el == "string"){ el = document.getElementById(el); }
+
+				function actualiser(){
+					var date = new Date();
+					var str = '<strong>'+date.getHours();
+					str += 'h'+(date.getMinutes()<10?'0':'')+date.getMinutes()+'</strong>';
+					str += '<small> '+(date.getSeconds()<10?'0':'')+date.getSeconds()+'</small>';
+					el.innerHTML = str;
+				}
+
+				actualiser();
+				setInterval(actualiser, 1000);
+			}
+		</script>
+
+		<div class="item popup" data-position="top center" data-content="Etat de la connexion avec le serveur" data-variation="mini inverted">
+			<i id="signal" class="signal icon"></i> <span id="ping"></span>
+		</div>
+
+		<div class="item popup" data-position="top center" data-content="Nombre d'utilisateurs en temps réel" data-variation="mini inverted">
+			<div style="margin-right:8px;">
+				<span id="users_history" style="display:hidden;"></span>
+			</div>
+			<span id="nb_users"></span>
+		</div>
+
+		<div class="item popup" data-position="top center" data-content="Nombre de fans sur Facebook" data-variation="mini inverted">
+			<span id="nb_fans"></span>
+		</div>
+
+		<!-- Script pour gérer l'affichage du nombre de fans Facebook en direct -->
+		<script>
+			function get_fans(){
+				$('#nb_fans').html('<a href="https://www.facebook.com/Emendareorg-311551702524141/" target="_blank">' + 4 + '<i class="facebook f icon"></i></a>');
+				/*$.get("https://graph.facebook.com/311551702524141?access_token=EAACEdEose0cBAGZAlEVZCyHYJzIXqa0ZCw9OwJOLzA2mGaFSipz1jblmfSG8KZCfcPOqSiH6CSf3TZAGz7YTZBbiX5bKjA6djmy9mAXccjR1HZAZBYLBfqVs9355tUZCkUinmp1mjRFST6bIhR9QVCm833seOKJnrFjhZAxNZAWMYI9vwZDZD&fields=likes", function(data){
+			        $('#nb_fans').html('<a href="https://www.facebook.com/Emendareorg-311551702524141/" target="_blank">' + data.likes + '<i class="facebook f icon"></i></a>');
+			    });*/
+			}
+			get_fans();
+			setInterval(get_fans, 30000);
+		</script>
+
+		<div class="right menu">
+
+			<!-- Liste des liens secondaires -->
+			<% for(var i=0; i < routes.length; i++) { %>
+				<% if(routes[i].alt_menu) { %>
+					<a href="<%= routes[i].path %>" <% if(routes[i].nofollow) { %> rel="nofollow" <% } %> class="item <% if(routes[i].path == req.path) { %> active <% } %>">
+						<small><%= routes[i].titre %></small>
+					</a>
+				<% } %>
+			<% } %>
+
+			<div class="item">
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+					<input type="hidden" name="cmd" value="_s-xclick">
+					<input type="hidden" name="hosted_button_id" value="H592SCDJSVWRA">
+					<input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal, le réflexe sécurité pour payer en ligne">
+					<img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>

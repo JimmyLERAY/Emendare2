@@ -1,0 +1,60 @@
+<div id="disp_texte" style="display:none;">
+
+  <h2 class="ui header">
+    <i class="users icon"></i>
+    <div class="content">
+      Zone principale de lecture et d'édition
+      <div class="sub header">C'est ici que tout se passe une fois un texte sélectionné</div>
+    </div>
+  </h2>
+
+  <div id="id_texte" style="display:none;"></div>
+
+  <div class="ui attached message">
+    <div class="header">
+      Un petit peu d'aide pour bien débuter sur Emendare ?
+    </div>
+    <p>
+      <small>
+        Voici l'échelle de couleur qui représente la popularité sur Emendare. Une teinte rouge indique que l'extrait du texte en question est impopulaire, tandis qu'une teinte verte indique une bonne popularité. Plus une portion de texte est populaire, plus il est coûteux de la modifier, et inversement. <b>Utilisez donc judicieusement vos points.</b>
+      </small>
+    </p>
+    <small>Popularité moyenne de ce texte :</small> <b><span id="popularite-moyenne">xx</span>%</b> <small>(<span id="votes-moyenne">xx</span>)</small>
+  </div>
+  <div class="ui gradient message bottom attached">
+    <% include gradient %>
+  </div>
+
+  <div id="content" class="ui segment piled" style="line-height:initial;" contenteditable="false"></div>
+
+</div>
+
+<script type="text/javascript">
+  function getSelectedText(){
+    if(window.getSelection().anchorNode.parentNode.className == "t c" || "t n" || "t p"){
+      var text = "";
+      if(typeof window.getSelection != "undefined"){
+        text = window.getSelection().toString();
+      }else if(typeof document.selection != "undefined" && document.selection.type == "Text"){
+        text = document.selection.createRange().text;
+      }else{
+        return false;
+      }
+      return text;
+    }else{
+      return false
+    }
+  }
+
+  function doSomethingWithSelectedText(){
+    var selectedText = getSelectedText();
+    if(selectedText){
+      $("#votes_options .buttons .ui.button").removeClass("disabled");
+    }else{
+      $("#votes_options .buttons .ui.button").addClass("disabled");
+    }
+  }
+
+  document.onmouseup = doSomethingWithSelectedText;
+  document.onkeyup = doSomethingWithSelectedText;
+</script>

@@ -1,0 +1,80 @@
+<div class="ui middle aligned center aligned grid">
+  <div class="column" style="max-width:350px;">
+
+    <h2 class="ui blue image header">
+      <div class="content">
+        Connexion à Emendare.org
+      </div>
+    </h2>
+
+    <form class="ui large form" action="/connexion" method="post">
+      <div class="ui segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="mail icon"></i>
+            <input type="text" name="email" placeholder="Adresse email">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="Mot de passe">
+          </div>
+        </div>
+        <div class="ui fluid large teal submit button">Se connecter</div>
+      </div>
+
+      <div class="ui error message"></div>
+
+    </form>
+
+    <% if(messages.erreur){ %>
+      <div class="ui icon error message">
+        <i class="warning icon"></i>
+        <div class="content">
+          <div class="header">
+            <%= messages.erreur %>
+          </div>
+          <p></p>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="ui message">
+      Vous êtes nouveau sur Emendare.org ?</br>
+      <a href="/inscription">Créer votre compte pour participer</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.ui.form').form({
+      fields: {
+        email: {
+          identifier: 'email',
+          depends: 'pseudo',
+          rules: [{
+              type: 'empty',
+              prompt: 'Renseignez votre email'
+            },{
+              type   : 'email',
+              prompt : 'Cet email est invalide'
+            }
+          ]
+        },
+        password: {
+          identifier: 'password',
+          depends: 'email',
+          rules: [
+            {
+              type: 'empty',
+              prompt: 'Renseignez votre mot de passe'
+            }
+          ]
+        }
+      }
+    });
+  });
+</script>

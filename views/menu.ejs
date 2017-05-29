@@ -1,0 +1,29 @@
+<!-- Menu principal -->
+<div id="top-menu" class="ui secondary top fixed pointing menu" style="background-color:#fff;">
+	<div class="ui fluid container">
+		<a class="toc item" style="display:inherit!important;">
+			<i class="sidebar icon"></i>
+		</a>
+
+		<!-- Liste des liens principaux -->
+		<% for(var i=0; i < routes.length; i++) { %>
+			<% if(routes[i].main_menu) { %>
+				<a href="<%= routes[i].path %>" <% if(routes[i].nofollow) { %> rel="nofollow" <% } %> class="item <% if(routes[i].path == req.path) { %> active <% } %>">
+					<%= routes[i].titre %>
+				</a>
+			<% } %>
+		<% } %>
+
+		<div class="right menu">
+			<% if(req.user){ %>
+				<a href="/profil" class="item">
+					<small>Mon profil / <span class="popup blue" id="nombre_points" data-position="bottom right" data-content="Vos points sur Emendare" data-variation="mini inverted"><%= req.user.points %><i class="ticket icon" style="margin:0;"></i></span></small>
+				</a>
+				<a href="/deconnexion" class="item"><small>Se déconnecter</small></a>
+			<% }else{ %>
+				<a href="/inscription" class="item"><small>Créer votre compte</small></a>
+				<a href="/connexion" class="item"><small>Se connecter</small></a>
+			<% } %>
+		</div>
+	</div>
+</div>

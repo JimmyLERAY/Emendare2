@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+
+	<!-- En-tête de la page -->
+	<% include header %>
+
+	<!-- Corps de la page -->
+	<body>
+
+		<!-- Sidebar -->
+		<% include sidebar %>
+
+		<!-- Contenu déplacé par la sidebar -->
+		<div class="pusher">
+
+			<!-- Menu principal -->
+			<% include menu %>
+
+			<!-- Contenu de la page -->
+			<div class="ui container" style="padding-top:75px;padding-bottom:200px">
+				<% var page = './pages/erreur' %>
+				<%- include(page) %>
+			</div>
+
+			<!-- Contenu de bas de page -->
+			<% include footer %>
+
+		</div>
+
+	</body>
+
+</html>

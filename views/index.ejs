@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<!-- En-tête et scripts -->
+		<% include header %>
+		<% include scripts %>
+	</head>
+	<body>
+
+		<!-- Sidebar -->
+		<% include sidebar %>
+
+		<!-- Contenu déplacé par la sidebar -->
+		<div class="pusher">
+
+			<!-- Menu principal -->
+			<% include menu %>
+
+			<!-- Contenu de la page -->
+			<div class="ui fluid container" style="padding:56px 16px;">
+				<% if(req.path == "/") { var page = './pages/home' } else { var page = './pages' + req.path } %>
+				<%- include(page) %>
+			</div>
+
+			<!-- Contenu de bas de page -->
+			<% include footer %>
+
+		</div>
+
+		<% if(req.user){ %>
+			<!-- Si l'utilisateur est connecté pour passer l'id au Javascript -->
+			<div id="user_id" style="display:none;"><%= req.user._id %></div>
+		<% } %>
+
+		<script>
+			// Scripts pour initialiser tous les popup
+			$('.popup').popup();
+			// et tous les éléments des formulaires
+			$('.ui.checkbox').checkbox();
+			$('.ui.radio.checkbox').checkbox();
+		</script>
+
+		<!-- Scripts pour Socket.io -->
+		<script src="/socket.io.min.js"></script>
+		<script src="/client.js"></script>
+
+	</body>
+</html>

@@ -1,0 +1,97 @@
+<% for(var i=0; i < textes.length; i++) { %>
+  <% if(textes[i]._id == req.query.id) { %>
+
+    <div class="ui stackable divided grid">
+
+      <!-- Colonne pour afficher le texte -->
+      <div class="eight wide column">
+
+        <h2 class="ui header">
+          <i class="font icon"></i>
+          <div class="content">
+            <%= textes[i].titre %>
+            <div class="sub header"><%= textes[i].description %></div>
+          </div>
+        </h2>
+
+        <% if(req.user){ %>
+          <% if(textes[i].users.length < users.length*(Math.log(users.length)+2)/(2*Math.sqrt(users.length))) { %>
+            <div class="ui message warning">
+              Ce texte n'a pas encore reçu assez de soutiens des utilisateurs pour être actif. Vous pouvez parrainer ce texte en utilisant le bouton ci-contre "Participer à ce texte". Le texte sera définitivement supprimé si il reste trop longtemps inactif.
+            </div>
+          <% } %>
+        <% } %>
+
+        <textarea id="text_previsualisation" style="display:none;"><%- textes[i].contenu %></textarea>
+        <div class="ui segment small" id="text_visualisation"></div>
+
+        <!-- Script pour générer la prévisualisation -->
+        <script type="text/javascript">
+          $(document).ready(function(){
+            var converter = new showdown.Converter();
+            $("#text_visualisation").html($.parseHTML(converter.makeHtml($("#text_previsualisation").val())));
+          });
+        </script>
+
+      </div>
+
+      <!-- Colonne pour afficher les options sur le texte -->
+      <div class="eight wide column">
+
+        <h2 class="ui header">
+          <i class="settings icon"></i>
+          <div class="content">
+            Liste des actions disponibles
+            <div class="sub header">Vos options pour participer à l'élaboration de ce texte</div>
+          </div>
+        </h2>
+
+        <!-- Affichage des options -->
+        <% if(req.user){ %>
+          <% if(textes[i].users.length > 0){ %>
+            <% var flag = true; %>
+            <% for(var j=0; j < textes[i].users.length; j++) { %>
+              <% if(textes[i].users[j].toString() == req.user._id.toString()) { %>
+                <!-- Si l'utilisateur est inscrit sur ce texte -->
+                <% var flag = false; %>
+                <a href="/creer_amendement?text=<%= textes[i]._id %>" class="ui labeled icon teal button">
+                  <i class="plus icon"></i>
+                  Proposer un amendement
+                </a>
+                <a href="/ne_participe_plus?user=<%= req.user._id.toString() %>&text=<%= textes[i]._id.toString() %>" class="ui labeled icon button">
+                  <i class="minus icon"></i>
+                  Ne plus participer à ce texte
+                </a>
+              <% } %>
+            <% } %>
+            <% if(flag) { %>
+              <!-- Si personne ne participe au texte -->
+            <a href="/nouveau_participant?user=<%= req.user._id.toString() %>&text=<%= textes[i]._id.toString() %>" class="ui labeled teal icon button">
+              <i class="plus icon"></i>
+              Participer à ce texte
+            </a>
+            <% } %>
+          <% }else{ %>
+            <!-- Si personne ne participe au texte -->
+            <a href="/nouveau_participant?user=<%= req.user._id.toString() %>&text=<%= textes[i]._id.toString() %>" class="ui labeled teal icon button">
+              <i class="plus icon"></i>
+              Participer à ce texte
+            </a>
+          <% } %>
+        <% }else{ %>
+          <!-- Si personne ne participe au texte -->
+          <a href="/connexion" class="ui labeled icon button">
+            <i class="angle double right icon"></i>
+            Connectez-vous pour avoir accès aux options
+          </a>
+          <div class="ui message warning">
+            Les actions pour participer à la rédaction et aux votes sur les textes sont réservées aux utilisateurs connectés. Vous pouvez toutefois lire tous les textes d'Emendare.org sans être connecté.
+          </div>
+        <% } %>
+
+      </div>
+
+    </div>
+
+  <% } %>
+<% } %>

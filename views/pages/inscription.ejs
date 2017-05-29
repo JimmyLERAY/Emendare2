@@ -1,0 +1,152 @@
+<div class="ui middle aligned center aligned grid">
+  <div class="column" style="max-width:360px;">
+
+    <h2 class="ui blue image header">
+      <div class="content">
+        Création de votre compte
+      </div>
+    </h2>
+
+    <form class="ui large form" action="/inscription" method="post">
+      <div class="ui segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="pseudo" placeholder="Pseudonyme">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="mail icon"></i>
+            <input type="text" name="email" placeholder="Adresse email (ne sera pas visible)">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="double angle right icon"></i>
+            <input type="text" name="emailbis" placeholder="Confirmez votre adresse email">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="Mot de passe">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="double angle right icon"></i>
+            <input type="password" name="passwordbis" placeholder="Confirmez votre mot de passe">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="phone icon"></i>
+            <input type="text" name="portable" placeholder="n° de portable (ne sera pas visible)">
+          </div>
+        </div>
+        <div class="ui fluid large teal submit button">Confirmer l'inscription</div>
+      </div>
+
+      <div class="ui error message"></div>
+    </form>
+
+    <% if(messages.erreur){ %>
+      <div class="ui icon error message">
+        <i class="warning icon"></i>
+        <div class="content">
+          <div class="header">
+            <%= messages.erreur %>
+          </div>
+          <p><a href="/connexion">Se connecter avec votre compte ?</a></p>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="ui message teal">
+      Note : ces données servent à améliorer l'identification des utilisateurs pour garantir une meilleure intégrité des votes. Elles ne seront pas utilisées à des fins commerciales.</br>
+      <a href="/confidentialite">Voir notre politique de confidentialité</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.ui.form').form({
+      fields: {
+        pseudo: {
+          identifier: 'pseudo',
+          rules: [{
+              type: 'empty',
+              prompt: 'Renseignez votre pseudonyme'
+            },{
+              type   : 'minLength[6]',
+              prompt : 'Votre pseudonyme est trop court'
+            },{
+              type   : 'maxLength[12]',
+              prompt : 'Votre pseudonyme est trop long'
+            }
+          ]
+        },
+        email: {
+          identifier: 'email',
+          depends: 'pseudo',
+          rules: [{
+              type: 'empty',
+              prompt: 'Renseignez votre email'
+            },{
+              type   : 'email',
+              prompt : 'Cet email est invalide'
+            }
+          ]
+        },
+        emailbis: {
+          identifier: 'emailbis',
+          depends: 'email',
+          rules: [{
+              type: 'match[email]',
+              prompt: 'Votre email ne correspond pas'
+            }
+          ]
+        },
+        password: {
+          identifier: 'password',
+          depends: 'email',
+          rules: [
+            {
+              type: 'empty',
+              prompt: 'Renseignez votre mot de passe'
+            },
+            {
+              type: 'minLength[8]',
+              prompt: 'Votre mot de passe est trop court'
+            }
+          ]
+        },
+        passwordbis: {
+          identifier: 'passwordbis',
+          depends: 'password',
+          rules: [{
+              type: 'match[password]',
+              prompt: 'Votre mot de passe ne correspond pas'
+            }
+          ]
+        },
+        portable: {
+          identifier: 'portable',
+          depends: 'password',
+          rules: [{
+              type: 'empty',
+              prompt: 'Renseignez votre n° de portable'
+            },
+            {
+              type: 'number',
+              prompt: 'Votre n° de portable est incorrect'
+            }
+          ]
+        }
+      }
+    });
+  });
+</script>

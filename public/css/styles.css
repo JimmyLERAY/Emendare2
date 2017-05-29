@@ -1,0 +1,92 @@
+#content{
+	min-height:350px;
+	margin:1em 0!important;
+	text-align: justify;
+}
+#content i{
+	font-style: normal;
+}
+
+#content .p{
+	color: #27ae60;
+}
+#content .c{
+	color: #c0392b;
+}
+#content .n{
+	color: inherit;
+}
+.hl{
+	background-color: #FBBD08;
+}
+.gold{
+	color:#f1c40f;
+}
+.silver{
+	color:#bdc3c7;
+}
+.bronze{
+	color:#e67e22;
+}
+.blue{
+	color:#2185D0;
+}
+.green{
+	color:#21BA45;
+}
+.gradient{
+	overflow:hidden;
+	padding:0px!important;
+	height:50px;
+}
+.gradient div{
+	width:1%;
+	float:left;
+	opacity:0.15;
+	height:100%;
+}
+.gradient div:hover{
+	border:1px solid;
+}
+.gradient .select{
+	opacity:0.5!important;
+	border:1px solid;
+}
+.masthead.segment {
+	padding: 1em 0em;
+	border-bottom: none !important;
+}
+.masthead h1.ui.header {
+	margin-bottom: 0em;
+	font-size: 4em;
+	font-weight: normal;
+}
+.masthead h2 {
+	font-size: 1.7em;
+	font-weight: normal;
+	margin-bottom: 1.5em;
+	margin-top: 0em;
+}
+.footer.segment {
+	padding: 2em !important;
+    border-top: 1px solid rgba(34,36,38,.15) !important;
+}
+
+@media only screen and (max-width: 700px) {
+	#top-menu .item{
+		display:none!important;
+	}
+	#bottom-footer{
+		display:none!important;
+	}
+	.masthead h1.ui.header {
+		font-size: 3em;
+	}
+	.masthead h2 {
+		margin-top: 1em;
+		font-size: 1.9em;
+	}
+	.masthead .huge.button .icon {
+		display:none!important;
+	}
+}

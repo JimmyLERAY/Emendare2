@@ -1,0 +1,61 @@
+<div id="options_texte" style="display:none;">
+
+  <h2 class="ui header grey">
+    <i class="cogs icon"></i>
+    <div class="content">
+      Options d'édition
+      <div class="sub header">Vos outils en tant que membre</div>
+    </div>
+  </h2>
+
+  <% if(req.user){ %>
+    <div class="ui message">
+      <div class="header">
+        C'est ici pour donner votre avis !
+      </div>
+        <small>
+          Sélectionnez l'extrait de votre choix dans le texte pour exprimer votre opinion. L'option «Pour» signifie que vous souhaitez que le passage considéré soit conservé. Tandis que l'option «Contre» signifie que vous souhaitez qu'il soit modifié ou supprimé. Donner votre avis sur le contenu des textes ne consomme pas vos points. <a href="/tutoriel">Besoin d'aide ?</a>
+        </small>
+        <div id="votes_options" class="ui grid center aligned" style="margin-top:10px;">
+          <div class="ui buttons">
+            <div id="vote_pour" class="ui button green disabled">Pour</div>
+            <div class="or" data-text=">"></div>
+            <div id="vote_neutre" class="ui button disabled">Sans avis</div>
+            <div class="or" data-text=">"></div>
+            <div id="vote_contre" class="ui button red disabled">Contre</div>
+          </div>
+        </div>
+    </div>
+  <% }else{ %>
+    <div class="ui message warning">
+      Vous devez être connecté pour avoir accès aux options pour ce texte. <a href="/connexion">Se connecter</a>
+    </div>
+  <% } %>
+
+  <script>
+    var getText = function(){
+      var id_texte = $("#id_texte").html();
+      var selection = window.getSelection();
+      var debut = selection.focusNode.parentElement.dataset.index;
+      var fin = selection.baseNode.parentElement.dataset.index;
+      document.getSelection().removeAllRanges();
+      return {texte: id_texte, debut: debut, fin: fin};
+    }
+
+    $(document).ready(function(){
+      $("#vote_pour").click(function(){
+        data = getText();
+        if(data.texte != ""){ send_vote("pour", data.texte, data.debut, data.fin); }
+      });
+      $("#vote_neutre").click(function(){
+        data = getText();
+        if(data.texte != ""){ send_vote("neutre", data.texte, data.debut, data.fin); }
+      });
+      $("#vote_contre").click(function(){
+        data = getText();
+        if(data.texte != ""){ send_vote("contre", data.texte, data.debut, data.fin); }
+      });
+    });
+  </script>
+
+</div>
